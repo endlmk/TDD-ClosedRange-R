@@ -7,8 +7,11 @@ is_valid_closed_range <- function(object) {
     "Start must be less than or equal to end."
   }
 }
-
 setValidity("ClosedRange", is_valid_closed_range)
+
+setMethod("as.character", "ClosedRange", function(x, ...) {
+  paste("[", as.character(x@start), ", ", as.character(x@end), "]", sep = "")
+})
 
 testthat::test_that("Can create ClosedRange when start is less than end", {
   closed_range <- new("ClosedRange", start = 1L, end = 2L)
@@ -22,4 +25,9 @@ testthat::test_that("Can create ClosedRange when start is equal to end", {
 
 testthat::test_that("Error occurs when start is larger than end", {
   testthat::expect_error(new("ClosedRange", start = 2L, end = 1L))
+})
+
+testthat::test_that("Can show range", {
+  cr <- new("ClosedRange", start = 1L, end = 2L)
+  testthat::expect_equal(as.character(cr), "[1, 2]")
 })
