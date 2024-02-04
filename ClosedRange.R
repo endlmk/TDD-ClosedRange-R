@@ -19,6 +19,14 @@ setMethod("contains", "ClosedRange", function(r, x) {
   r@start <= x && x <= r@end
 })
 
+setMethod(
+  "Compare",
+  signature(e1 = "ClosedRange", e2 = "ClosedRange"),
+  function(e1, e2) {
+    e1@start == e2@start && e1@end == e2@end
+  }
+)
+
 testthat::test_that("Can create ClosedRange when start is less than end", {
   closed_range <- new("ClosedRange", start = 1L, end = 2L)
   testthat::expect_true(!is.null(closed_range))
@@ -46,4 +54,16 @@ testthat::test_that("Value is in range", {
 testthat::test_that("Value is out of range", {
   cr <- new("ClosedRange", start = 1L, end = 2L)
   testthat::expect_false(contains(cr, 3))
+})
+
+testthat::test_that("Equal range", {
+  cr1 <- new("ClosedRange", start = 1L, end = 2L)
+  cr2 <- new("ClosedRange", start = 1L, end = 2L)
+  testthat::expect_true(cr1 == cr2)
+})
+
+testthat::test_that("Not equal range", {
+  cr1 <- new("ClosedRange", start = 1L, end = 2L)
+  cr2 <- new("ClosedRange", start = 1L, end = 3L)
+  testthat::expect_false(cr1 == cr2)
 })
